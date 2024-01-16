@@ -9,6 +9,7 @@ function setup() {
     canvas.parent('sketch-holder');
 
     pg = createGraphics(size, size);
+    processUrlParameters()
 }
 
 let vertices = []
@@ -192,4 +193,53 @@ function keyPressed() {
         TIME_DELTA /= 1.5
     }
     //return false; // prevent any default behavior
+}
+
+function verticesToString() {
+    let chunks = []
+    for (const p of vertices) {
+        chunks.push(p[0]+"@"+p[1])
+    }
+    return base64UrlEncode(chunks.join("&"))
+
+}
+
+function stringToVertices(input) {
+    let decoded = base64UrlDecode(input)
+    return decoded.split('&').map(item => item.split('@').map(item => parseFloat(item)));
+}
+
+function getShareLink() {
+    const baseAddress = window.location.origin;
+    const param = verticesToString()
+    if (param) {
+        console.log(baseAddress+"?  points="+param);
+    }
+    else {
+        console.log(baseAddress);
+    }
+}
+
+function processUrlParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("points")) {
+        vertices = stringToVertices(urlParams.get("points"))
+        calculateFourier()
+    }
+}
+
+function base64UrlEncode(data) {
+    const base64 = btoa(data);
+    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function base64UrlDecode(base64url) {
+    let base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
+    
+    // Add back missing padding if needed
+    while (base64.length % 4) {
+        base64 += '=';
+    }
+
+    return atob(base64);
 }
