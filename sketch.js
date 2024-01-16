@@ -221,7 +221,7 @@ function stringToVertices(input) {
 }
 
 function getShareLink() {
-    const baseAddress = window.location.origin;
+    const baseAddress = window.location.origin+window.location.pathname;
     const param = verticesToString()
     let link = ""
     if (param) {
