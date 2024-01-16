@@ -169,28 +169,39 @@ function keyReleased() {
 }
 
 function keyPressed() {
+    // SPACE
     if (keyCode === 32) {
         reset()
     }
 
+    // P
     if (keyCode === 80) {
         showPath = !showPath
     }
 
+    // C
     if (keyCode === 67) {
         showCircles = !showCircles
     }
 
+    // O
     if (keyCode === 79) {
         showOriginal = !showOriginal
     }
 
+    // +
     if (keyCode === 187) {
         TIME_DELTA *= 1.5
     }
 
+    // -
     if (keyCode === 189) {
         TIME_DELTA /= 1.5
+    }
+
+    // S
+    if (keyCode === 83) {
+        getShareLink()
     }
     //return false; // prevent any default behavior
 }
@@ -212,12 +223,15 @@ function stringToVertices(input) {
 function getShareLink() {
     const baseAddress = window.location.origin;
     const param = verticesToString()
+    let link = ""
     if (param) {
-        console.log(baseAddress+"?  points="+param);
+        link = baseAddress+"?points="+param
     }
     else {
-        console.log(baseAddress);
+        link = baseAddress
     }
+    console.log(link)
+    copyToClipboard(link)
 }
 
 function processUrlParameters() {
@@ -242,4 +256,14 @@ function base64UrlDecode(base64url) {
     }
 
     return atob(base64);
+}
+
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            console.log('Text copied to clipboard:', text);
+        })
+        .catch(err => {
+            console.error('Unable to copy text to clipboard', err);
+        });
 }
