@@ -1,5 +1,5 @@
 const POINT_SIZE = 5
-const DEGREE = 10
+const DEGREE = 100
 let TIME_DELTA = 0.001
 
 function setup() {
@@ -211,12 +211,12 @@ function verticesToString() {
     for (const p of vertices) {
         chunks.push(p[0]+"@"+p[1])
     }
-    return base64UrlEncode(chunks.join("&"))
+    return LZString.compressToEncodedURIComponent(chunks.join("&"))
 
 }
 
 function stringToVertices(input) {
-    let decoded = base64UrlDecode(input)
+    let decoded = LZString.decompressFromEncodedURIComponent(input)
     return decoded.split('&').map(item => item.split('@').map(item => parseFloat(item)));
 }
 
